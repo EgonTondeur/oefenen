@@ -42,7 +42,7 @@ model.fit(
     epochs=args.epochs
 )
 
-# BELANGRIJK DEEL 1  
+# BELANGRIJK DEEL 1.0
 output_dir = Path(args.output)
 output_dir.mkdir(parents=True, exist_ok=True)
 
