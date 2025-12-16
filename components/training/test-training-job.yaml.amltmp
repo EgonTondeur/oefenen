@@ -1,0 +1,28 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+display_name: test-training
+
+code: ./code
+command: >
+  python train.py
+  --train_data ${{inputs.training_data}}
+  --test_data ${{inputs.testing_data}}
+  --epochs 1
+  --output ${{outputs.model_output}}
+
+environment: azureml:aml-training-cli:0.1.0
+
+inputs:
+  training_data:
+    type: uri_folder
+    path: azureml:cats:1
+  testing_data:
+    type: uri_folder
+    path: azureml:dogs:1
+
+outputs:
+  model_output:
+    type: uri_folder
+
+compute: azureml:compute-egon

@@ -1,0 +1,23 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: data_prep_image_resize_cli
+version: 0.1.0
+type: command
+display_name: Image resize
+description: Resize images to 64x64
+is_deterministic: true
+
+environment: azureml:aml-preprocessing-cli:0.1.0
+code: ./code
+
+command: >
+  python dataprep.py
+  --data ${{inputs.data}}
+  --output_data ${{outputs.output_data}}
+
+inputs:
+  data:
+    type: uri_folder
+
+outputs:
+  output_data:
+    type: uri_folder

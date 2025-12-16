@@ -1,0 +1,23 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+display_name: test-dataprep
+
+code: ./code
+command: >
+  python dataprep.py
+  --data ${{inputs.data}}
+  --output_data ${{outputs.output_data}}
+
+environment: azureml:aml-preprocessing-cli:0.1.0
+
+inputs:
+  data:
+    type: uri_folder
+    path: azureml:pandas:1
+
+outputs:
+  output_data:
+    type: uri_folder
+
+compute: azureml:compute-egon

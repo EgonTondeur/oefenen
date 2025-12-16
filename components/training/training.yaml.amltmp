@@ -1,0 +1,27 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: animal_training_cli
+version: 0.1.2
+type: command
+display_name: Animal CNN Training
+
+environment: azureml:aml-training-cli:0.1.0
+code: ./code
+
+command: >
+  python train.py
+  --train_data ${{inputs.training_data}}
+  --test_data ${{inputs.testing_data}}
+  --epochs ${{inputs.epochs}}
+  --output ${{outputs.model_output}}
+
+inputs:
+  training_data:
+    type: uri_folder
+  testing_data:
+    type: uri_folder
+  epochs:
+    type: integer
+
+outputs:
+  model_output:
+    type: uri_folder

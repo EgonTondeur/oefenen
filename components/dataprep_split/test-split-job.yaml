@@ -1,0 +1,35 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+display_name: test-split
+
+code: ./code
+command: >
+  python split.py
+  --animal_1 ${{inputs.animal_1}}
+  --animal_2 ${{inputs.animal_2}}
+  --animal_3 ${{inputs.animal_3}}
+  --split 20
+  --training_data ${{outputs.training_data}}
+  --testing_data ${{outputs.testing_data}}
+
+environment: azureml:aml-preprocessing-cli:0.1.0
+
+inputs:
+  animal_1:
+    type: uri_folder
+    path: azureml:pandas:1
+  animal_2:
+    type: uri_folder
+    path: azureml:cats:1
+  animal_3:
+    type: uri_folder
+    path: azureml:dogs:1
+
+outputs:
+  training_data:
+    type: uri_folder
+  testing_data:
+    type: uri_folder
+
+compute: azureml:compute-egon

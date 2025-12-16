@@ -1,0 +1,56 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+type: pipeline
+display_name: animal-classification-pipeline
+
+settings:
+  default_compute: azureml:compute-egon
+
+inputs:
+  pandas_data:
+    type: uri_folder
+    path: azureml:pandas:1
+  cats_data:
+    type: uri_folder
+    path: azureml:cats:1
+  dogs_data:
+    type: uri_folder
+    path: azureml:dogs:1
+
+jobs:
+  prep_pandas:
+    component: azureml:data_prep_image_resize_cli:0.1.0
+    inputs:
+      data: ${{parent.inputs.pandas_data}}
+
+  prep_cats:
+    component: azureml:data_prep_image_resize_cli:0.1.0
+    inputs:
+      data: ${{parent.inputs.cats_data}}
+
+  prep_dogs:
+    component: azureml:data_prep_image_resize_cli:0.1.0
+    inputs:
+      data: ${{parent.inputs.dogs_data}}
+
+  split:
+    component: azureml:data_split_cli:0.1.0
+    inputs:
+      animal_1: ${{parent.jobs.prep_pandas.outputs.output_data}}
+      animal_2: ${{parent.jobs.prep_cats.outputs.output_data}}
+      animal_3: ${{parent.jobs.prep_dogs.outputs.output_data}}
+      train_test_split_percentage: 20
+
+  train:
+    component: azureml:animal_training_cli:0.1.2
+    inputs:
+      training_data: ${{parent.jobs.split.outputs.training_data}}
+      testing_data: ${{parent.jobs.split.outputs.testing_data}}
+      epochs: 1
+
+  # register:
+  #   component: azureml://registries/azureml/components/register_model
+  #   inputs:
+  #     model_path: ${{parent.jobs.train.outputs.model_output}}
+  #     model_name: animal-classification
+
+
