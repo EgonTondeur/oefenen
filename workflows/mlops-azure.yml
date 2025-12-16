@@ -1,4 +1,4 @@
-name: CI
+name: MLOps Azure Pipeline
 
 on:
   push:
